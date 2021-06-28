@@ -41,7 +41,6 @@ _italic text_
 1. ordered list item 1
 1. ordered list item 2
 
-<asdasd|ASDASD>
 `;
 
 const App = () => {
