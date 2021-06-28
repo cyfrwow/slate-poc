@@ -6,8 +6,10 @@ import unified from "unified";
 import markdown from "remark-parse";
 import slate from "remark-slate";
 import Editor from "@monaco-editor/react";
+import "./App.css";
 
-const markdownStr = `# Heading one
+const markdownStr = `
+# Heading one
 
 ## Heading two
 
@@ -143,37 +145,35 @@ const App = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        margin: "10px",
-        flexWrap: "wrap",
-        height: "90vh",
-      }}
-    >
-      <textarea
-        style={textStyle}
-        value={markdownValue}
-        editable
-        onChange={(e) => convertToSlateObject(e)}
-      ></textarea>
-      <Editor
-        height="90vh"
-        width="30vw"
-        options={{ wordWrap: true }}
-        defaultLanguage="json"
-        onMount={editorDidMount}
-        value={JSON.stringify(slateObject)}
-      />
-      <Slate
-        editor={editor}
-        style={{ width: "30vw", padding: "10px", height: "auto" }}
-        value={slateObject}
-        onChange={(value) => convertToMarkdown(value)}
-      >
-        <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
-      </Slate>
+    <div className="container">
+      <div className="column">
+        <h4>Markdown</h4>
+        <textarea
+          value={markdownValue}
+          editable
+          onChange={(e) => convertToSlateObject(e)}
+        ></textarea>
+      </div>
+      <div className="column">
+        <h4>Slate object</h4>
+        <Editor
+          className="editor"
+          options={{ wordWrap: true }}
+          defaultLanguage="json"
+          onMount={editorDidMount}
+          value={JSON.stringify(slateObject)}
+        />
+      </div>
+      <div className="column">
+        <h4>Slate Editor</h4>
+        <Slate
+          editor={editor}
+          value={slateObject}
+          onChange={(value) => convertToMarkdown(value)}
+        >
+          <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
+        </Slate>
+      </div>
     </div>
   );
 };
