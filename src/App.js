@@ -134,6 +134,7 @@ const App = () => {
       .process(e.target.value, (err, slateObject) => {
         if (err) throw err;
         setSlateObject(slateObject.result);
+        editor.getAction("editor.action.formatDocument").run();
       });
   };
 
