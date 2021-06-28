@@ -127,9 +127,6 @@ const App = () => {
       .process(e.target.value, (err, slateObject) => {
         if (err) throw err;
         setSlateObject(slateObject.result);
-        setTimeout(function () {
-          editor.getAction("editor.action.formatDocument").run();
-        }, 300);
       });
   };
 
