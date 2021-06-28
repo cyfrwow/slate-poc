@@ -112,15 +112,6 @@ const App = () => {
     return <Leaf {...props} />;
   }, []);
 
-  const textStyle = {
-    width: "30vw",
-    height: "100%",
-    padding: "10px",
-    border: "1px solid #eee",
-    borderRadius: "10px",
-    resize: "none",
-  };
-
   function editorDidMount(editor, monaco) {
     setTimeout(function () {
       editor.getAction("editor.action.formatDocument").run();
