@@ -5,7 +5,10 @@ import { Slate, Editable, withReact } from "slate-react";
 import unified from "unified";
 import markdown from "remark-parse";
 import slate from "remark-slate";
+import gfm from "remark-gfm";
 import Editor from "@monaco-editor/react";
+// import { remarkToSlate } from "remark-slate-transformer";
+
 import "./App.css";
 
 const markdownStr = `
@@ -25,15 +28,24 @@ Normal paragraph
 
 ---
 
-\`code line\`
+\`console.log('code line')\`
+
+\`\`\` js
+const test = ({ message}) => {
+    message = message.toLowerCase();
+    console.log(message)
+}
+\`\`\`
 
 _italic text_
 
 **bold text**
 
-~~ strike ~~
+~~strike~~
 
-[hyperlink](https://jackhanford.com)
+autolink <https://postman.com>
+
+custom link [hyperlink](https://jackhanford.com)
 
 > A block quote.
 
@@ -49,15 +61,25 @@ const App = () => {
   const editor = useMemo(() => withReact(createEditor()), []);
   const [slateObject, setSlateObject] = useState([{ text: "asdasdads" }]);
   const [markdownValue, setMarkdownValue] = useState(markdownStr);
+
+  //   const processor = unified().use(markdown).use(gfm).use(remarkToSlate);
+
   useEffect(() => {
     // serialize slate state to a markdown string
     unified()
       .use(markdown)
+      .use(gfm)
       .use(slate)
       .process(markdownStr, (err, slateObject) => {
         if (err) throw err;
         setSlateObject(slateObject.result);
       });
+
+    // const processMarkdown = async () => {
+    //   const result = await processor.processSync(markdownStr).result;
+    //   setSlateObject(result);
+    // };
+    // processMarkdown();
   }, []);
 
   const renderElement = useCallback((props) => {
@@ -103,6 +125,12 @@ const App = () => {
         return <ol {...props.attributes}>{props.children}</ol>;
       case "list_item":
         return <li {...props.attributes}>{props.children}</li>;
+      case "code_block":
+        return (
+          <pre>
+            <code {...props.attributes}>{props.children}</code>
+          </pre>
+        );
       default:
         return <p {...props.attributes}>{props.children}</p>;
     }
@@ -123,11 +151,14 @@ const App = () => {
     setMarkdownValue(e.target.value);
     unified()
       .use(markdown)
+      .use(gfm)
       .use(slate)
       .process(e.target.value, (err, slateObject) => {
         if (err) throw err;
         setSlateObject(slateObject.result);
       });
+    // const result = processor.processSync(e.target.value).result;
+    // setSlateObject(result);
   };
 
   const convertToMarkdown = (obj) => {
